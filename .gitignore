@@ -1,0 +1,29 @@
+# OS / IDE
+.DS_Store
+.idea/
+.vscode/
+
+# Go build artifacts
+bin/
+build/
+dist/
+*.exe
+*.dll
+*.so
+*.dylib
+
+# Test outputs / coverage
+coverage/
+coverage.*
+*.out
+
+# Logs / temps
+*.log
+.tmp/
+tmp/
+
+# Dependency vendors (если не используешь vendor)
+vendor/
+
+# Docker / Compose локальные файлы
+docker-compose.override.yml

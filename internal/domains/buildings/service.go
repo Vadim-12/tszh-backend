@@ -1,0 +1,78 @@
+package buildings
+
+import (
+	"context"
+
+	"gorm.io/gorm"
+)
+
+type Service struct{ DB *gorm.DB }
+
+func (service *Service) Create(ctx context.Context, creationDto Building) (*Building, error) {
+	if err := service.DB.WithContext(ctx).Create(&creationDto).Error; err != nil {
+		return nil, err
+	}
+	return &creationDto, nil
+}
+
+func (service *Service) Get(ctx context.Context, buildingId string) (*Building, error) {
+	var building Building
+	if err := service.DB.WithContext(ctx).First(&building, "id = ?", buildingId).Error; err != nil {
+		if err == gorm.ErrRecordNotFound {
+			return nil, ErrNotFound
+		}
+		return nil, err
+	}
+	return &building, nil
+}
+
+func (service *Service) List(ctx context.Context, limit, offset int) ([]Building, error) {
+	if limit <= 0 {
+		limit = 20
+	}
+	if offset < 0 {
+		offset = 0
+	}
+	var result []Building
+	if err := service.DB.WithContext(ctx).Order("created_at desc").Limit(limit).Offset(offset).Find(&result).Error; err != nil {
+		return nil, err
+	}
+	return result, nil
+}
+
+func (service *Service) Update(ctx context.Context, buildingId string, patch Building) (*Building, error) {
+	result := service.DB.WithContext(ctx).Model(&Building{}).
+		Where("id = ?", buildingId).
+		Updates(map[string]any{
+			"number":     patch.Number,
+			"floor":      patch.Floor,
+			"owner_name": patch.OwnerName,
+		})
+	if result.Error != nil {
+		return nil, result.Error
+	}
+	if result.RowsAffected == 0 {
+		return nil, ErrNotFound
+	}
+	return service.Get(ctx, buildingId)
+}
+
+func (service *Service) Delete(ctx context.Context, buildingId string) error {
+	result := service.DB.WithContext(ctx).Delete(&Building{}, "id = ?", buildingId)
+	if result.Error != nil {
+		return result.Error
+	}
+	if result.RowsAffected == 0 {
+		return ErrNotFound
+	}
+	return nil
+}
+
+// На будущее — пример транзакции:
+/*
+func (s *Service) DoInTx(ctx context.Context, fn func(tx *gorm.DB) error) error {
+	return s.DB.WithContext(ctx).Transaction(func(tx *gorm.DB) error {
+		return fn(tx)
+	})
+}
+*/

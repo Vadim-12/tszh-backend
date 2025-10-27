@@ -1,0 +1,38 @@
+# Git / CI
+.git
+.gitignore
+.github/
+
+# IDE / OS
+.vscode/
+.idea/
+.DS_Store
+
+# Документация и лишнее
+docs/
+README*
+LICENSE
+CHANGELOG*
+CONTRIBUTING*
+*.md
+
+# Тесты и артефакты (в рантайме не нужны)
+**/*_test.go
+coverage/
+coverage.*
+*.out
+*.log
+tmp/
+.tmp/
+bin/
+build/
+dist/
+
+# Локальные среды/секреты
+.env
+.env.*
+
+# Инфра/скрипты, если не нужны для сборки бинарника
+infra/
+deploy/
+scripts/
