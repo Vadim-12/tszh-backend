@@ -31,7 +31,6 @@ func Run() error {
 	// Авто-создание таблицы для модели
 	migrateEntitesDB(gdb)
 	router := setupDomainsWithRouter(gdb)
-
 	server := &http.Server{Addr: ":" + config.Port, Handler: router}
 
 	// graceful shutdown

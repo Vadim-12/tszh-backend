@@ -15,7 +15,7 @@ func (service *Service) Create(ctx context.Context, creationDto Building) (*Buil
 	return &creationDto, nil
 }
 
-func (service *Service) Get(ctx context.Context, buildingId string) (*Building, error) {
+func (service *Service) GetOne(ctx context.Context, buildingId string) (*Building, error) {
 	var building Building
 	if err := service.DB.WithContext(ctx).First(&building, "id = ?", buildingId).Error; err != nil {
 		if err == gorm.ErrRecordNotFound {
@@ -26,7 +26,7 @@ func (service *Service) Get(ctx context.Context, buildingId string) (*Building, 
 	return &building, nil
 }
 
-func (service *Service) List(ctx context.Context, limit, offset int) ([]Building, error) {
+func (service *Service) GetList(ctx context.Context, limit, offset int) ([]Building, error) {
 	if limit <= 0 {
 		limit = 20
 	}
@@ -40,7 +40,7 @@ func (service *Service) List(ctx context.Context, limit, offset int) ([]Building
 	return result, nil
 }
 
-func (service *Service) Update(ctx context.Context, buildingId string, patch Building) (*Building, error) {
+func (service *Service) UpdateOne(ctx context.Context, buildingId string, patch Building) (*Building, error) {
 	result := service.DB.WithContext(ctx).Model(&Building{}).
 		Where("id = ?", buildingId).
 		Updates(map[string]any{
@@ -54,10 +54,10 @@ func (service *Service) Update(ctx context.Context, buildingId string, patch Bui
 	if result.RowsAffected == 0 {
 		return nil, ErrNotFound
 	}
-	return service.Get(ctx, buildingId)
+	return service.GetOne(ctx, buildingId)
 }
 
-func (service *Service) Delete(ctx context.Context, buildingId string) error {
+func (service *Service) DeleteOne(ctx context.Context, buildingId string) error {
 	result := service.DB.WithContext(ctx).Delete(&Building{}, "id = ?", buildingId)
 	if result.Error != nil {
 		return result.Error

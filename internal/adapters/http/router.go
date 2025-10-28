@@ -21,6 +21,7 @@ func NewRouter(deps Deps) *gin.Engine {
 
 	apiRouterGroupV1 := rootRouter.Group("/api/v1")
 	deps.Buildings.Register(apiRouterGroupV1)
+	deps.Users.Register(apiRouterGroupV1)
 
 	return rootRouter
 }

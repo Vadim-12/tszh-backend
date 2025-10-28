@@ -4,7 +4,6 @@ import (
 	"strconv"
 
 	"github.com/Vadim-12/tszh-backend/internal/domains/buildings"
-	"github.com/google/uuid"
 
 	"github.com/gin-gonic/gin"
 )
@@ -21,7 +20,7 @@ func (h *BuildingHandlers) Register(g *gin.RouterGroup) {
 
 func (h *BuildingHandlers) get(c *gin.Context) {
 	buildingId := c.Param("id")
-	out, err := h.Service.Get(c, buildingId)
+	out, err := h.Service.GetOne(c, buildingId)
 
 	if err != nil {
 		if err == buildings.ErrNotFound {
@@ -38,7 +37,7 @@ func (h *BuildingHandlers) getAll(ctx *gin.Context) {
 	limit, _ := strconv.Atoi(ctx.DefaultQuery("limit", "20"))
 	offset, _ := strconv.Atoi(ctx.DefaultQuery("offset", "0"))
 
-	buildings, err := h.Service.List(ctx, limit, offset)
+	buildings, err := h.Service.GetList(ctx, limit, offset)
 	if err != nil {
 		ctx.JSON(500, gin.H{"error": err.Error()})
 		return
@@ -58,7 +57,6 @@ func (h *BuildingHandlers) create(ctx *gin.Context) {
 	}
 
 	in := buildings.Building{
-		ID:        uuid.New(),
 		Number:    creationDto.Number,
 		Floor:     creationDto.Floor,
 		OwnerName: creationDto.OwnerName,
@@ -90,7 +88,7 @@ func (h *BuildingHandlers) update(ctx *gin.Context) {
 		OwnerName: updateDto.OwnerName,
 	}
 
-	out, err := h.Service.Update(ctx, buildingId, in)
+	out, err := h.Service.UpdateOne(ctx, buildingId, in)
 	if err != nil {
 		if err == buildings.ErrNotFound {
 			ctx.JSON(404, gin.H{"error": "Building not found"})
@@ -104,7 +102,7 @@ func (h *BuildingHandlers) update(ctx *gin.Context) {
 
 func (h *BuildingHandlers) deleteOne(ctx *gin.Context) {
 	buildingId := ctx.Param("id")
-	if err := h.Service.Delete(ctx, buildingId); err != nil {
+	if err := h.Service.DeleteOne(ctx, buildingId); err != nil {
 		if err == buildings.ErrNotFound {
 			ctx.JSON(404, gin.H{"error": "Building not found"})
 			return

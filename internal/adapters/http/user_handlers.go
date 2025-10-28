@@ -5,7 +5,6 @@ import (
 
 	"github.com/Vadim-12/tszh-backend/internal/domains/users"
 	"github.com/gin-gonic/gin"
-	"github.com/google/uuid"
 )
 
 type UserHandlers struct{ Service *users.Service }
@@ -56,7 +55,6 @@ func (h *UserHandlers) create(ctx *gin.Context) {
 	}
 
 	in := users.User{
-		ID:          uuid.New(),
 		FullName:    creationDto.FullName,
 		Email:       creationDto.Email,
 		PhoneNumber: creationDto.PhoneNumber,
