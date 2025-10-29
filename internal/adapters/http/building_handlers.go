@@ -4,7 +4,6 @@ import (
 	"strconv"
 
 	"github.com/Vadim-12/tszh-backend/internal/domains/buildings"
-
 	"github.com/gin-gonic/gin"
 )
 
