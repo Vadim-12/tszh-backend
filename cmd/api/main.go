@@ -20,7 +20,7 @@ func main() {
 	logrus.SetFormatter(new(logrus.JSONFormatter))
 
 	if err := godotenv.Load(); err != nil {
-		logrus.Fatalf("error loading env variables: %s", err.Error())
+		logrus.Info("no .env file found, using environment variables")
 	}
 
 	ctx := context.Background()
