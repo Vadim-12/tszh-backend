@@ -33,7 +33,7 @@ func (h *Handler) signUp(ctx *gin.Context) {
 			return
 
 		default:
-			newResponseError(ctx, http.StatusInternalServerError, CustomErrorBody{Code: "INTERNAL_ERROR", Data: "internal server error"})
+			newResponseError(ctx, http.StatusInternalServerError, CustomErrorBody{Code: "INTERNAL_SERVER_ERROR", Data: "internal server error"})
 			return
 		}
 	}
@@ -52,7 +52,7 @@ func (h *Handler) signIn(ctx *gin.Context) {
 	if err != nil {
 		switch {
 		case errors.Is(err, appErrors.ErrInvalidCredentials):
-			newResponseError(ctx, http.StatusUnauthorized, CustomErrorBody{Code: "INVALID_CREDS", Data: "invalid phone number of password"})
+			newResponseError(ctx, http.StatusUnauthorized, CustomErrorBody{Code: "WRONG_CREDS", Data: "wrong phone number of password"})
 			return
 
 		case errors.Is(err, context.Canceled), errors.Is(err, context.DeadlineExceeded):
