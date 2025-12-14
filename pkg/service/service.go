@@ -21,11 +21,16 @@ type Building interface{}
 
 type Organization interface{}
 
+type Health interface {
+	Ping(ctx context.Context) error
+}
+
 type Service struct {
 	Authorization
 	User
 	Building
 	Organization
+	Health
 }
 
 func NewService(repos *repository.Repository, utils *utils.Utils) *Service {
@@ -33,6 +38,7 @@ func NewService(repos *repository.Repository, utils *utils.Utils) *Service {
 		Authorization: NewAuthService(repos.User, repos.RefreshTokens, utils.Hasher, utils.JWTSigner),
 		User:          NewUserService(repos.User),
 		Building:      NewBuildingService(repos.Building),
-		Organization:  NewOrganizationPostgres(repos.Organization),
+		Organization:  NewOrganizationService(repos.Organization),
+		Health:        NewHealthService(repos.Health),
 	}
 }

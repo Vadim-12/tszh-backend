@@ -52,6 +52,8 @@ func (h *Handler) InitRoutes() *gin.Engine {
 			organizations.PUT("/:id", h.updateOrganization)
 			organizations.DELETE("/:id", h.deleteOrganization)
 		}
+
+		api.GET("/health", h.ping)
 	}
 
 	return router

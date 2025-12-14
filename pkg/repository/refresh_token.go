@@ -6,7 +6,6 @@ import (
 
 	"github.com/Vadim-12/tszh-backend/pkg/entity"
 	"github.com/google/uuid"
-	"github.com/sirupsen/logrus"
 	"gorm.io/gorm"
 )
 
@@ -19,9 +18,7 @@ func NewRefreshTokenPostgres(db *gorm.DB) *RefreshTokenPostgres {
 }
 
 func (r *RefreshTokenPostgres) Save(ctx context.Context, token *entity.RefreshToken) error {
-	logrus.Infoln("CREATE REFRESH TOKEN", token)
 	result := r.db.WithContext(ctx).Create(token)
-	logrus.Infof("CREATED REFRESH TOKEN %v", token)
 	return result.Error
 }
 

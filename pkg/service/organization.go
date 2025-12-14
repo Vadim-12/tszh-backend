@@ -6,6 +6,6 @@ type OrganizationService struct {
 	organizationRepo repository.Organization
 }
 
-func NewOrganizationPostgres(organizationRepo repository.Organization) *OrganizationService {
+func NewOrganizationService(organizationRepo repository.Organization) *OrganizationService {
 	return &OrganizationService{organizationRepo: organizationRepo}
 }

@@ -26,11 +26,16 @@ type Building interface{}
 
 type Organization interface{}
 
+type Health interface {
+	Ping(ctx context.Context) error
+}
+
 type Repository struct {
 	User
 	RefreshTokens
 	Building
 	Organization
+	Health
 }
 
 func NewRepository(db *gorm.DB) *Repository {
@@ -39,5 +44,6 @@ func NewRepository(db *gorm.DB) *Repository {
 		RefreshTokens: NewRefreshTokenPostgres(db),
 		Building:      NewBuildingPostgres(db),
 		Organization:  NewOrganizationPostgres(db),
+		Health:        NewHealthPostgres(db),
 	}
 }
