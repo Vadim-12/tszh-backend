@@ -56,12 +56,39 @@ jobs:
           script: |
             set -e
             IMAGE="${{ secrets.DOCKERHUB_USERNAME }}/tszh-backend:beta-${{ github.sha }}"
+            DB_URL='${{ secrets.DB_URL }}'
+            DB_SERVICE='${{ secrets.DB_SERVICE }}'
+
             docker pull "$IMAGE"
 
-            DB_URL='${{ secrets.DB_URL }}'
             docker run --rm --network dokploy-network \
               --entrypoint /migrate \
               "$IMAGE" -path=/schema -database "$DB_URL" up
+
+            DB_CONTAINER_ID=$(docker ps -q --filter "name=${DB_SERVICE}" | head -n 1)
+
+            if [ -z "$DB_CONTAINER_ID" ]; then
+              echo "❌ DB container not found for service: ${DB_SERVICE}"
+              docker ps --format "table {{.Names}}\t{{.Status}}"
+              exit 1
+            fi
+
+            # если таблицы нет (первый прогон), считаем dirty=false
+            if ! docker exec "$DB_CONTAINER_ID" psql -U postgres -d tszh_beta -tAc "SELECT 1 FROM schema_migrations LIMIT 1;" >/dev/null 2>&1; then
+              echo "⚠️ schema_migrations table not found yet; assuming clean state"
+              exit 0
+            fi
+
+            DIRTY=$(docker exec "$DB_CONTAINER_ID" psql -U postgres -d tszh_beta -tAc "SELECT dirty FROM schema_migrations;" | tr -d '[:space:]')
+            VER=$(docker exec "$DB_CONTAINER_ID" psql -U postgres -d tszh_beta -tAc "SELECT version FROM schema_migrations;" | tr -d '[:space:]')
+
+            echo "schema_migrations: version=$VER dirty=$DIRTY"
+
+            if [ "$DIRTY" = "t" ] || [ "$DIRTY" = "true" ]; then
+              echo "❌ Migrations are DIRTY. Stopping deploy."
+              exit 1
+            fi
+
       - name: Trigger Dokploy deploy
         run: |
           curl -fsSL -X POST ${{ secrets.DOKPLOY_WEBHOOK_URL }}
