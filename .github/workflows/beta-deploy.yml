@@ -57,8 +57,11 @@ jobs:
             set -e
             IMAGE="${{ secrets.DOCKERHUB_USERNAME }}/tszh-backend:beta-${{ github.sha }}"
             docker pull "$IMAGE"
+
+            DB_URL='${{ secrets.DB_URL }}'
             docker run --rm --network dokploy-network \
-              "$IMAGE" /migrate -path=/schema -database='${{ secrets.DB_URL }}' up
+              --entrypoint /migrate \
+              "$IMAGE" -path=/schema -database "$DB_URL" up
       - name: Trigger Dokploy deploy
         run: |
           curl -fsSL -X POST ${{ secrets.DOKPLOY_WEBHOOK_URL }}
