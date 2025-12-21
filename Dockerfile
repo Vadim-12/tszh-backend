@@ -7,7 +7,7 @@ RUN go mod download
 RUN go install -tags 'postgres' github.com/golang-migrate/migrate/v4/cmd/migrate@latest
 
 COPY . .
-RUN CGO_ENABLED=0 GOOS=linux go build -o /out/app ./cmd
+RUN CGO_ENABLED=0 GOOS=linux go build -o /out/app ./cmd/api
 
 FROM gcr.io/distroless/base-debian12
 ENV PORT=8080
