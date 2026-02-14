@@ -1,4 +1,8 @@
 APP_ENV ?= dev
+DB_URL ?= postgres://postgres:postgres@127.0.0.1:5432/tszh_db?sslmode=disable
+
+MIGRATE_DIR=schema
+MIGRATE_EXT=sql
 
 install:
 	go mod tidy
@@ -10,17 +14,24 @@ test:
 	go test ./... -race -cover
 
 recreate-db:
-	docker compose -f dev/docker-compose.yml down -v
-	docker compose -f dev/docker-compose.yml up -d
+	docker compose -f docker-compose.dev.yml down -v
+	docker compose -f docker-compose.dev.yml up -d
 
 db-up:
-	cd dev && docker-compose down -v && docker-compose up -d
+	docker-compose -f docker-compose.dev.yml down && docker-compose -f docker-compose.dev.yml up -d
 
 migrate-up:
-	goose -dir ./schema postgres "$(DB_DSN)" up
+	migrate -path ./schema -database "${DB_URL}" up
 
 migrate-down:
-	goose -dir ./schema postgres "$(DB_DSN)" down
+	migrate -path ./schema -database "${DB_URL}" down
+
+create-migration:
+	@if [ -z "$(name)" ]; then \
+		echo "❌ Usage: make create-migration name=your_migration_name"; \
+		exit 1; \
+	fi
+	migrate create -ext $(MIGRATE_EXT) -dir $(MIGRATE_DIR) -seq $(name)
 
 sqlc:
 	sqlc generate

@@ -7,16 +7,14 @@ import (
 )
 
 type Organization struct {
-	ID uuid.UUID `gorm:"type:uuid;default:gen_random_uuid();primaryKey" json:"id"`
+	ID           uuid.UUID `gorm:"type:uuid;default:gen_random_uuid();primaryKey"`
+	FullTitle    string    `gorm:"not null"`
+	ShortTitle   string    `gorm:"not null;index"`
+	INN          string    `gorm:"not null;uniqueIndex;size:12"`
+	Email        *string   `gorm:"type:text"`
+	LegalAddress string    `gorm:"not null"`
+	CreatedAt    time.Time `gorm:"autoCreateTime"`
+	UpdatedAt    time.Time `gorm:"autoUpdateTime"`
 
-	FullTitle    string `gorm:"not null"             json:"full_title"`
-	ShortTitle   string `gorm:"uniqueIndex"          json:"short_title"`
-	INN          string `gorm:"uniqueIndex;not null" json:"inn"`
-	Email        string `gorm:"not null"             json:"email"`
-	LegalAddress string `gorm:"not null"             json:"legal_address"`
-
-	CreatedAt time.Time `gorm:"autoCreateTime"       json:"created_at"`
-	UpdatedAt time.Time `gorm:"autoUpdateTime"       json:"updated_at"`
-
-	StaffLinks []*OrganizationStaff `gorm:"foreignKey:OrganizationID" json:"-"`
+	StaffLinks []*OrganizationStaff `gorm:"foreignKey:OrganizationID"`
 }

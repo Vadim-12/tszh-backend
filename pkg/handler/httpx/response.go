@@ -1,4 +1,4 @@
-package handler
+package httpx
 
 import (
 	"github.com/gin-gonic/gin"
@@ -14,7 +14,7 @@ type CustomErrorBody struct {
 	Data any    `json:"data,omitempty"`
 }
 
-func newResponseError(ctx *gin.Context, statusCode int, err CustomErrorBody) {
+func NewResponseError(ctx *gin.Context, statusCode int, err CustomErrorBody) {
 	logrus.Error(err.Data)
 	ctx.AbortWithStatusJSON(statusCode, CustomErrorBody{Code: err.Code, Data: err.Data})
 }

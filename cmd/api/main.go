@@ -55,7 +55,7 @@ func main() {
 	log.Println("repos", repos)
 	services := service.NewService(repos, utils)
 	log.Println("services", services)
-	handlers := handler.NewHandler(services)
+	handlers := handler.NewHandler(services, &utils.JWTSigner)
 	log.Println("handlers", handlers)
 	router := handlers.InitRoutes()
 

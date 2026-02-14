@@ -7,13 +7,13 @@ import (
 )
 
 type PaymentAccount struct {
-	ID                   uuid.UUID `gorm:"type:uuid;default:gen_random_uuid();primaryKey" json:"id"`
-	Number               int       `gorm:"not null"       json:"number"`
-	BIC                  string    `gorm:"not null"       json:"bic"`
-	BankName             string    `gorm:"not null"       json:"bank_name"`
-	CorrespondentAccount string    `gorm:"not null"       json:"correspondent_account"`
-	CreatedAt            time.Time `gorm:"autoCreateTime" json:"created_at"`
-	UpdatedAt            time.Time `gorm:"autoUpdateTime" json:"updated_at"`
+	ID                   uuid.UUID `gorm:"type:uuid;default:gen_random_uuid();primaryKey"`
+	Number               int       `gorm:"not null"`
+	BIC                  string    `gorm:"not null"`
+	BankName             string    `gorm:"not null"`
+	CorrespondentAccount string    `gorm:"not null"`
+	CreatedAt            time.Time `gorm:"autoCreateTime"`
+	UpdatedAt            time.Time `gorm:"autoUpdateTime"`
 }
 
 // это все потом (все банковские приколы и оплаты)

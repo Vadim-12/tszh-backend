@@ -24,7 +24,12 @@ type RefreshTokens interface {
 
 type Building interface{}
 
-type Organization interface{}
+type Organization interface {
+	GetAllOrganizations(ctx context.Context) ([]entity.Organization, error)
+	GetByID(ctx context.Context, id uuid.UUID) (*entity.Organization, error)
+	Create(ctx context.Context, creationDto *entity.Organization, ownerUserID uuid.UUID) (*entity.Organization, error)
+	GetByINN(ctx context.Context, INN string) (*entity.Organization, error)
+}
 
 type Health interface {
 	Ping(ctx context.Context) error

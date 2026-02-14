@@ -37,12 +37,14 @@ func (s *AuthService) SignUp(ctx context.Context, signUpDto *dto.SignUpRequestDt
 		return nil, errors.ErrUserWithPhoneNumberAlreadyExists
 	}
 
-	existedUser, err = s.userRepo.FindByEmail(ctx, signUpDto.Email)
-	if err != nil {
-		return nil, err
-	}
-	if existedUser != nil {
-		return nil, errors.ErrUserWithEmailAlreadyExists
+	if signUpDto.Email != nil && *signUpDto.Email != "" {
+		existedUser, err = s.userRepo.FindByEmail(ctx, *signUpDto.Email)
+		if err != nil {
+			return nil, err
+		}
+		if existedUser != nil {
+			return nil, errors.ErrUserWithEmailAlreadyExists
+		}
 	}
 
 	passwordHash, err := s.hasher.Hash(signUpDto.Password)

@@ -7,15 +7,14 @@ import (
 )
 
 type UsersAndBuildingUnits struct {
-	UserID         uuid.UUID `gorm:"type:uuid;primaryKey;index" json:"user_id"`
-	BuildingUnitID uuid.UUID `gorm:"type:uuid;primaryKey;index" json:"building_unit_id"`
-	Role           string    `gorm:"not null;size:32"           json:"role"`
+	UserID         uuid.UUID `gorm:"type:uuid;primaryKey;index"`
+	BuildingUnitID uuid.UUID `gorm:"type:uuid;primaryKey;index"`
+	Role           string    `gorm:"not null;size:32"`
+	CreatedAt      time.Time `gorm:"autoCreateTime"`
+	UpdatedAt      time.Time `gorm:"autoUpdateTime"`
 
-	CreatedAt time.Time `gorm:"autoCreateTime"            json:"created_at"`
-	UpdatedAt time.Time `gorm:"autoUpdateTime"            json:"updated_at"`
-
-	User         *User         `gorm:"foreignKey:UserID;constraint:OnDelete:CASCADE"         json:"-"`
-	BuildingUnit *BuildingUnit `gorm:"foreignKey:BuildingUnitID;constraint:OnDelete:CASCADE" json:"-"`
+	User         *User         `gorm:"foreignKey:UserID;constraint:OnDelete:CASCADE"`
+	BuildingUnit *BuildingUnit `gorm:"foreignKey:BuildingUnitID;constraint:OnDelete:CASCADE"`
 }
 
 func (UsersAndBuildingUnits) TableName() string {

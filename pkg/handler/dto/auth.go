@@ -1,13 +1,15 @@
 package dto
 
 type SignInRequestDto struct {
-	PhoneNumber string `json:"phone_number"`
-	Password    string `json:"password"`
+	PhoneNumber string `json:"phone_number" validate:"required,e164"`
+	Password    string `json:"password" validate:"required,min=8,max=72"`
 }
 
 type UserResponseDto struct {
-	Id       string `json:"id"`
-	FullName string `json:"full_name"`
+	Id          string  `json:"id"`
+	FullName    string  `json:"full_name"`
+	PhoneNumber string  `json:"phone_number"`
+	Email       *string `json:"email"`
 }
 
 type TokensResponseDto struct {
@@ -21,10 +23,10 @@ type SignInResponseDto struct {
 }
 
 type SignUpRequestDto struct {
-	FullName    string `json:"full_name"`
-	PhoneNumber string `json:"phone_number"`
-	Email       string `json:"email"`
-	Password    string `json:"password"`
+	FullName    string  `json:"full_name" validate:"required,min=2,max=100"`
+	PhoneNumber string  `json:"phone_number" validate:"required,e164"`
+	Email       *string `json:"email" validate:"omitempty,email"`
+	Password    string  `json:"password" validate:"required,min=8,max=72"`
 }
 
 type SignUpResponseDto struct {
@@ -33,7 +35,7 @@ type SignUpResponseDto struct {
 }
 
 type RefreshRequestDto struct {
-	RefreshToken string `json:"refresh_token"`
+	RefreshToken string `json:"refresh_token" validate:"required,min=20"`
 }
 
 type RefreshResponseDto struct {
@@ -41,7 +43,7 @@ type RefreshResponseDto struct {
 }
 
 type LogoutRequestDto struct {
-	RefreshToken string `json:"refresh_token"`
+	RefreshToken string `json:"refresh_token" validate:"required,min=20"`
 }
 
 type LogoutResponseDto struct {

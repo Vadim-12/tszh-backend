@@ -7,15 +7,14 @@ import (
 )
 
 type OrganizationStaff struct {
-	OrganizationID uuid.UUID `gorm:"type:uuid;primaryKey;index" json:"organization_id"`
-	UserID         uuid.UUID `gorm:"type:uuid;primaryKey;index" json:"user_id"`
-	Role           string    `gorm:"not null"             json:"role"`
+	OrganizationID uuid.UUID `gorm:"type:uuid;primaryKey;index"`
+	UserID         uuid.UUID `gorm:"type:uuid;primaryKey;index"`
+	Role           string    `gorm:"not null"`
+	CreatedAt      time.Time `gorm:"autoCreateTime"`
+	UpdatedAt      time.Time `gorm:"autoUpdateTime"`
 
-	CreatedAt time.Time `gorm:"autoCreateTime"            json:"created_at"`
-	UpdatedAt time.Time `gorm:"autoUpdateTime"            json:"updated_at"`
-
-	User         *User         `gorm:"foreignKey:UserID;constraint:OnDelete:CASCADE"         json:"-"`
-	Organization *Organization `gorm:"foreignKey:OrganizationID;constraint:OnDelete:CASCADE" json:"-"`
+	User         *User         `gorm:"foreignKey:UserID;constraint:OnDelete:CASCADE"`
+	Organization *Organization `gorm:"foreignKey:OrganizationID;constraint:OnDelete:CASCADE"`
 }
 
 func (OrganizationStaff) TableName() string {
